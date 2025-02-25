@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ejemplos</groupId>
-	<artifactId>ApiRest_Senderos</artifactId>
+	<artifactId>10_APIRest_Senderos</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ApiRest_Senderos</name>
+	<name>10_APIRest_Senderos</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

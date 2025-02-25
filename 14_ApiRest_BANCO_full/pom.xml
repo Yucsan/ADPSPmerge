@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ejemplos</groupId>
-	<artifactId>ApiRest_BANCO_full</artifactId>
+	<artifactId>14_ApiRest_BANCO_full</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ApiRest__BANCO_full</name>
+	<name>14_ApiRest_BANCO_full</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

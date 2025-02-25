@@ -33,7 +33,7 @@ public class IndexController1 {
 		Usuario usuario = new Usuario();
 		usuario.setNombre("Jose Luis");
 		usuario.setApellido("Perez Del Rio");
-		usuario.setEmail("rr@gmail.com");
+		//usuario.setEmail("rr@gmail.com");
 
 		model.addAttribute("usuario", usuario); // la clase y la variable deben llamarse igual que la clase en minuscula
 		model.addAttribute("titulo", "Perfil".concat(usuario.getNombre()));

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title th:text="${titulo}">Insert title here</title>
+</head>
+
+<body>
+    <h1 th:text="${titulo}"></h1>
+
+    <!-- Mostrar mensaje si existe -->
+    <div th:if="${mensaje != null}" th:text="${mensaje}" class="alert alert-info"></div>
+
+    <!-- Mostrar mensaje si no hay senderos -->
+    <div th:if="${clientes == null or clientes.size() == 0}" class="alert alert-warning">
+        No hay clientes en la lista!!
+    </div>
+
+    <!-- Mostrar la tabla solo si hay senderos -->
+    <table th:if="${clientes != null and clientes.size() > 0}" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Cod Cliente</th>
+                <th>Apellidos</th>
+                <th>Direccion</th>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cliente : ${clientes}">
+                <td th:text="${cliente.codCliente}"></td>
+                <td th:text="${cliente.apellidos}"></td>
+                <td th:text="${cliente.direccion}"></td>
+                <td th:text="${cliente.nombre}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

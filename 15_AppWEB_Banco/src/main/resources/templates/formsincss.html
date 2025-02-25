@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymelaf.org">
+
+<head>
+	<meta charset="UTF-8" />
+	<title th:text="${titulo}">Insert title here</title>
+</head>
+
+<body>
+	<h1 th:text="${titulo}"></h1>
+		
+		<form th:action="@{/form}" th:object="${cliente}" method="post"  >
+			<p><label>Cod Cliente</label><input type="text" value="" th:field="*{codCliente}" /></p>
+			<p><label>apellidos</label><input type="text" th:field="*{apellidos}" /></p>
+			<p><label>direccion</label><input type="text" th:field="*{direccion}" /></p>
+			<p><label>nombre</label><input type="text" th:field="*{nombre}" /></p>
+			
+			<input type="submit" value="Crear Cliente" />
+			
+		</form>
+
+	
+	</table>
+</body>
+
+</html>

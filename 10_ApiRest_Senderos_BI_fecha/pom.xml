@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ejemplos</groupId>
-	<artifactId>ApiRest_Senderos_BI_fecha</artifactId>
+	<artifactId>10_ApiRest_Senderos_BI_fecha</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ApiRest_Senderos_BI_fecha</name>
+	<name>10_ApiRest_Senderos_BI_fecha</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>

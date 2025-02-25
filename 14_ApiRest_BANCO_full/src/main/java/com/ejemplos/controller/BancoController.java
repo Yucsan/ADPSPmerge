@@ -17,12 +17,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ejemplos.DTO.ClienteDTO;
+import com.ejemplos.DTO.ClienteDTOConverter;
+import com.ejemplos.DTO.CreateClienteDTO;
 import com.ejemplos.DTO.CreateCuentaDTO;
 import com.ejemplos.DTO.CuentaDTO;
 import com.ejemplos.DTO.CuentaDTOConverter;
 import com.ejemplos.DTO.MovimientoDTO;
 import com.ejemplos.DTO.MovimientoDTOConverter;
 import com.ejemplos.excepciones.ApiError;
+import com.ejemplos.excepciones.ClienteNotFoundException;
 import com.ejemplos.excepciones.CuentaNotFoundException;
 import com.ejemplos.modelo.Cliente;
 import com.ejemplos.modelo.ClienteRepositorio;
@@ -47,6 +51,9 @@ public class BancoController {
 	
 	@Autowired
 	private final ClienteRepositorio clienteRepositorio;
+	
+	@Autowired
+	private final ClienteDTOConverter clienteDTOConverter;
 	
 	@Autowired
 	private final MovimientoRepositorio movimientoRepositorio;
@@ -80,8 +87,89 @@ public class BancoController {
 			return ResponseEntity.ok(result);
 		}
 	}
-
-
+	
+	// CRUD CLIENTE ------------------------------------
+	
+	@GetMapping("/verclientes")  
+	public ResponseEntity<?> mostrarClientes(){
+		List<Cliente>result = clienteRepositorio.findAll();
+			
+		if(result.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}else {
+			List<ClienteDTO> dtoList = result.stream() 
+			.map(clienteDTOConverter::convertirADTO)
+			.collect(Collectors.toList());
+			return ResponseEntity.ok(dtoList);
+		}
+	}
+	
+	@GetMapping("/cliente/{id}")
+	public ResponseEntity<?> obtenerUnCliente(@PathVariable String id) {
+		Cliente result = clienteRepositorio.findById(id).orElse(null); 
+		
+		//not found es el 404
+		if(result==null)
+			throw new ClienteNotFoundException(id);
+			
+		return ResponseEntity.ok(clienteDTOConverter.convertirADTO(result));
+			
+	}
+	
+	@PostMapping("/nuevocliente")
+	public  ResponseEntity<?> nuevoCliente(@RequestBody CreateClienteDTO nuevo) {
+		
+		// Imprimir los valores del DTO para verificar
+	    System.out.println("codCliente: " + nuevo.getCodCliente() );
+	    System.out.println("apellidos: " + nuevo.getApellidos() );
+	    System.out.println("direccion: " + nuevo.getDireccion() );
+	    System.out.println("nombre: " + nuevo.getNombre() );
+	
+		Cliente saved = clienteDTOConverter.convertirACliente(nuevo);
+		return  ResponseEntity.status(HttpStatus.CREATED).body( clienteRepositorio.save(saved)); //201 Created
+	}
+	
+	@PutMapping("/cliente/{id}")
+	public ResponseEntity<?>  editaCliente(@RequestBody CreateClienteDTO editar, @PathVariable String id ) {
+		 System.out.println("******* ID: " + editar.getCodCliente() );
+		 
+		if(clienteRepositorio.existsById(id)) {
+			Cliente n = clienteDTOConverter.convertirACliente(editar);			
+			n.setCodCliente(id);
+			
+			if(editar.getApellidos() == null )
+				n.setApellidos(clienteRepositorio.findById(id).get().getApellidos());
+			
+						
+			if(editar.getDireccion() == null)
+				n.setDireccion(clienteRepositorio.findById(id).get().getDireccion() );
+				
+			
+			if(editar.getNombre() == null)
+				n.setNombre(clienteRepositorio.findById(id).get().getNombre() );
+				
+			
+			return ResponseEntity.ok(clienteRepositorio.save(n)); //ok
+		}else {
+			return ResponseEntity.notFound().build(); //404 no lo encuentro
+		}
+	
+	}
+	
+	@DeleteMapping("/cliente/{id}") 
+	public ResponseEntity<?> borrarCliente(@PathVariable String id ) {
+		String saludo = "Borrado Cuenta con ID: "+id;
+		if(clienteRepositorio.existsById(id) ) {
+			clienteRepositorio.deleteById(id);
+			return ResponseEntity.ok(saludo);
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	
+	// CRUD CUENTAS ----------------------------------------------
+	
 	@GetMapping("/cuentasAll")  
 	public ResponseEntity<?> obtenerCuentasAll(){
 		List<Cuenta>result = cuentaRepositorio.findAll();
@@ -203,6 +291,15 @@ public class BancoController {
 	//cuando se produzca un error de este tipo ejecuta este método
 	@ExceptionHandler(CuentaNotFoundException.class)
 	public ResponseEntity<ApiError> handleProductoNoEncontrado(CuentaNotFoundException ex) {
+		ApiError apiError = new ApiError();
+		apiError.setEstado(HttpStatus.NOT_FOUND);
+		apiError.setFecha(LocalDateTime.now());
+		apiError.setMensaje(ex.getMessage());
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+	}
+	
+	@ExceptionHandler(ClienteNotFoundException.class)
+	public ResponseEntity<ApiError> handleProductoNoEncontrado(ClienteNotFoundException ex) {
 		ApiError apiError = new ApiError();
 		apiError.setEstado(HttpStatus.NOT_FOUND);
 		apiError.setFecha(LocalDateTime.now());
